@@ -29,8 +29,14 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Retry(name = "patientRetry")
     public Appointment createAppointment(AppointmentServiceRequest request) {
         boolean isDoctorValid = doctorClient.checkDoctorExists(request.getDoctorId());
-        boolean isPatientValid = patientClient.checkPatientExists(request.getPatientId());
+        if (!isDoctorValid) {
+            return null;
+        }
 
+        boolean isPatientValid = patientClient.checkPatientExists(request.getPatientId());
+        if (!isPatientValid){
+            return null;
+        }
         Appointment newAppointment = Appointment.builder()
                 .patientId(request.getPatientId())
                 .doctorId(request.getDoctorId())

@@ -22,7 +22,6 @@ public class Resilience4jEventListener {
 
     @Bean
     @Lazy
-    @Order(Ordered.LOWEST_PRECEDENCE)
     public RegistryEventConsumer circuitBreakerConsumer(){
         return new RegistryEventConsumer() {
             @Override
