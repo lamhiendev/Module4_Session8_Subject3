@@ -19,5 +19,6 @@ resilience4j:
       patientRetry:
         max-attempts: 3
         wait-duration: 2s
-        retry-exceptions[0] : org.springframework.web.client.ResourceAccessException
+        retry-exceptions :
+         - org.springframework.web.client.ResourceAccessException
 
