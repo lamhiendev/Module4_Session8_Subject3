@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
+import org.springframework.core.annotation.Order;
 
 
 @Configuration
@@ -19,6 +19,7 @@ public class Resilience4jEventListener {
     private static final Logger log = LoggerFactory.getLogger(Resilience4jEventListener.class);
 
     @Bean
+    @Order(1)
     public RegistryEventConsumer circuitBreakerConsumer(){
         return new RegistryEventConsumer() {
             @Override
