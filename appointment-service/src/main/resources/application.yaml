@@ -5,7 +5,9 @@ spring:
     import: "configserver:http://localhost:8888"
   aop:
     proxy-target-class: true
-
+logging:
+  level:
+    io.github.resilience4j: DEBUG
 resilience4j:
   circuitbreaker:
     instances:
