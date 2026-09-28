@@ -3,6 +3,9 @@ spring:
     name: appointment-service
   config:
     import: "configserver:http://localhost:8888"
+  aop:
+    proxy-target-class: true
+
 resilience4j:
   circuitbreaker:
     instances:
