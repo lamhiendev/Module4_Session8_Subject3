@@ -6,6 +6,7 @@ import demo.appointmentservice.entity.Appointment;
 import demo.appointmentservice.repository.AppointmentRepository;
 import demo.appointmentservice.service.AppointmentService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     @CircuitBreaker(name = "doctorServiceCB", fallbackMethod = "fallbackAppointment")
+    @Retry(name = "patientRetry")
     public Appointment createAppointment(AppointmentServiceRequest request) {
         boolean isPatientValid = checkEntityExists("http://patient-service/api/v1/patients/"+request.getPatientId());
         if(!isPatientValid){
