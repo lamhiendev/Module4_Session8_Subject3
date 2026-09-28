@@ -14,8 +14,8 @@ public class PatientClient {
     private final RestTemplate restTemplate;
 
     @CircuitBreaker(name = "patientServiceCB", fallbackMethod = "getPatientFallback")
-    public boolean checkDoctorExists(Long patientId) {
-        String url = "http://doctor-service/api/v1/doctors/" + patientId;
+    public boolean checkPatientExists(Long patientId) {
+        String url = "http://doctor-service/api/v1/patients/" + patientId;
         restTemplate.getForObject(url, Object.class);
         return true;
     }

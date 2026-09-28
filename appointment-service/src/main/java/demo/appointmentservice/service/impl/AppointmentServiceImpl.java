@@ -1,5 +1,7 @@
 package demo.appointmentservice.service.impl;
 
+import demo.appointmentservice.client.DoctorClient;
+import demo.appointmentservice.client.PatientClient;
 import demo.appointmentservice.dto.AppointmentServiceRequest;
 
 import demo.appointmentservice.entity.Appointment;
@@ -20,20 +22,14 @@ import org.springframework.web.client.RestTemplate;
 public class AppointmentServiceImpl implements AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final RestTemplate restTemplate;
-
+    private final PatientClient patientClient;
+    private final DoctorClient doctorClient;
     @Override
     @CircuitBreaker(name = "doctorServiceCB", fallbackMethod = "fallbackAppointment")
     @Retry(name = "patientRetry")
     public Appointment createAppointment(AppointmentServiceRequest request) {
-        boolean isPatientValid = checkEntityExists("http://patient-service/api/v1/patients/"+request.getPatientId());
-        if(!isPatientValid){
-            throw new RuntimeException("Bệnh nhân với ID" + request.getPatientId() + " không tồn tại");
-        }
-
-        boolean isDoctorValid = checkEntityExists("http://doctor-service/api/v1/doctors/" + request.getDoctorId());
-        if (!isDoctorValid){
-            throw new RuntimeException("Bác sĩ với ID" + request.getDoctorId() + " không tồn tại");
-        }
+        boolean isDoctorValid = doctorClient.checkDoctorExists(request.getDoctorId());
+        boolean isPatientValid = patientClient.checkPatientExists(request.getPatientId());
 
         Appointment newAppointment = Appointment.builder()
                 .patientId(request.getPatientId())
@@ -50,14 +46,5 @@ public class AppointmentServiceImpl implements AppointmentService {
         throw new RuntimeException("Hiện tại không thể kết nối đến Docter-Service");
     }
 
-    private boolean checkEntityExists(String url){
-        try {
-            restTemplate.getForObject(url, Object.class);
-            return true;
-        }catch (HttpClientErrorException.NotFound e) {
-            return false;
-        }catch(Exception e){
-            return false;
-        }
-    }
+
 }
