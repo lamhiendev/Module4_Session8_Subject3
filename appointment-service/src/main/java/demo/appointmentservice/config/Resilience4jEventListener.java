@@ -21,7 +21,6 @@ public class Resilience4jEventListener {
     private static final Logger log = LoggerFactory.getLogger(Resilience4jEventListener.class);
 
     @Bean
-    @Lazy
     public RegistryEventConsumer circuitBreakerConsumer(){
         return new RegistryEventConsumer() {
             @Override
